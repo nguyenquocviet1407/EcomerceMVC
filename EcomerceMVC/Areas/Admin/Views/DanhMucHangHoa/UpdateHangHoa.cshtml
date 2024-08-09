@@ -1,0 +1,148 @@
+﻿@model EcomerceMVC.ViewModels.CapNhatHangHoaModel
+@{
+	ViewData["Title"] = "UpdateHangHoa";
+	Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="page-header">
+	<h3 class="fw-bold mb-3">Tạp Hóa</h3>
+	<ul class="breadcrumbs mb-3">
+		<li class="nav-home">
+			<a href="#">Home</a>
+		</li>
+		<li class="separator">
+			<i class="icon-arrow-right"></i>
+		</li>
+		<li class="nav-item">
+			<a href="#">Danh mục Hàng hóa</a>
+		</li>
+		<li class="separator">
+			<i class="icon-arrow-right"></i>
+		</li>
+		<li class="nav-item">
+			<a href="#">Cập nhật hàng hóa</a>
+		</li>
+	</ul>
+</div>
+<form id="FormCapNhatHangHoa" enctype="multipart/form-data">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-title">Cập nhập hàng hóa</div>
+					<input asp-for="@Model.MaHh" hidden>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6 col-lg-4">
+							<div class="form-group">
+								<label asp-for="@Model.TenHh"></label><sup>*</sup>
+								<input asp-for="@Model.TenHh" class="form-control" />
+								<span asp-validation-for="@Model.TenHh" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="@Model.MaLoai" class="form-label my-3"></label><sup>*</sup>
+								<select id="list-timezone" class="form-select" asp-items="@ViewBag.LoaiHangHoa" asp-for="@Model.MaLoai">
+								</select>
+							</div>
+							<div class="form-group">
+								<label asp-for="@Model.MoTaDonVi" class="form-label my-3"></label>
+								<input asp-for="@Model.MoTaDonVi" class="form-control">
+							</div>
+							<div class="form-group">
+								<label asp-for="@Model.DonGia" class="form-label my-3"></label><sup>*</sup>
+								<input asp-for="@Model.DonGia" class="form-control">
+								<span asp-validation-for="@Model.DonGia" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-md-6 col-lg-4">
+							<div class="form-group">
+								<label asp-for="@Model.TenAlias"></label>
+								<input asp-for="@Model.TenAlias" class="form-control">
+							</div>
+							<div class="form-group">
+								<label asp-for="@Model.NgaySx" class="form-label my-3"></label><sup>*</sup>
+								<input asp-for="@Model.NgaySx" class="form-control">
+								<span asp-validation-for="@Model.NgaySx" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="@Model.MaNcc" class="form-label my-3"></label><sup>*</sup>
+								<select id="list-timezone" class="form-select" asp-items="@ViewBag.Nhacungcap" asp-for="@Model.MaNcc">
+								</select>
+							</div>
+							<div class="form-group">
+								<label asp-for="@Model.MoTa" class="form-label my-3"></label>
+								<textarea asp-for="@Model.MoTa" class="form-control" spellcheck="false" cols="30" rows="5"></textarea>
+							</div>
+						</div>
+						<div class="col-md-6 col-lg-4 ">
+							<div class="form-group">
+								<div class="col-lg-10">
+									<label asp-for="@Model.Hinh" class="form-label my-3">Hình ảnh</label>
+									<div class="border rounded">
+										<img src="~/Hinh/HangHoa/@Model.Hinh" id="hinh" class="img-fluid rounded" alt="Image">
+									</div>
+									<input asp-for="@Model.FileHinh" type="file" class="form-control" id="File" onchange="chooseFile(this)" accept="image/gif, image/jpeg, image/png">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-action">
+				<button type="submit" class="btn btn-success">Cập Nhật</button>
+				<a href="/Admin/DanhMucHangHoa/Index" class="btn btn-danger">Cancel</a>
+			</div>
+		</div>
+	</div>
+</form>
+
+@section Scripts {
+	<script>
+		function chooseFile(fileInput) {
+			if (fileInput.files && fileInput.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					$('#hinh').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(fileInput.files[0]);
+			}
+		}
+
+		//Cập nhật hàng hóa
+		$("#FormCapNhatHangHoa").on('submit', function (e) {
+			e.preventDefault(); // Ngăn chặn hành vi submit mặc định của form
+			var formdata = new FormData(this);// Tạo một đối tượng FormData mới
+			$.ajax({
+				url: '/Admin/DanhMucHangHoa/UpdateHangHoa',
+				type: 'PUT',
+				data: formdata,
+				dataType:'json',
+				contentType: false,// cần thiết để gửi FormData thông qua Ajax
+				processData: false,// cần thiết để gửi FormData thông qua Ajax
+				success: function (response) {
+					if (response.success == true)
+					{
+						Swal.fire({
+							icon: 'success',
+							title: 'Thông Báo',
+							text: 'Cập nhật hàng hóa thành công !'
+						});
+					}
+					else {
+						Swal.fire({
+							icon: 'error',
+							title: 'Thông Báo',
+							text: 'Cập nhật thất bại !',
+						});
+					}
+				}
+			});
+		});
+
+	</script>
+
+	<!-- kiểm tra input không cần gửi qua server -->
+   <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js" ></script>
+   <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+}
+

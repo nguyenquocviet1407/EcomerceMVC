@@ -1,0 +1,314 @@
+﻿@model EcomerceMVC.ViewModels.NhapHangHoaViewModel
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+	<h3 class="fw-bold mb-3">Tạp Hóa</h3>
+	<ul class="breadcrumbs mb-3">
+		<li class="separator">
+			<i class="icon-arrow-right"></i>
+		</li>
+		<li class="nav-item">
+			<a href="#">Home</a>
+		</li>
+		<li class="separator">
+			<i class="icon-arrow-right"></i>
+		</li>
+		<li class="nav-item">
+			<a href="#">Danh mục hàng hóa</a>
+		</li>
+	</ul>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-header">
+				<div class="d-flex align-items-center">
+					<h4 class="card-title">Danh mục hàng hóa</h4>
+					<button class="btn btn-primary btn-round ms-auto"
+							data-bs-toggle="modal"
+							data-bs-target="#addRowModal">
+						<i class="fa fa-plus"></i>
+						Add Row
+					</button>
+				</div>
+			</div>
+			<div class="card-body">
+				<!-- Modal -->
+				<div class="modal fade"
+					 id="addRowModal"
+					 tabindex="-1"
+					 role="dialog"
+					 aria-hidden="true" data-bs-backdrop="static">
+					<div class="modal-dialog modal-dialog-centered modal-lg" >
+						<div class="modal-content">
+							<form id="FormNhapHangHoa" enctype="multipart/form-data">
+								<div class="modal-header border-0">
+									<h5 class="modal-title">
+										<span class="fw-mediumbold"> New</span>
+										<span class="fw-light"> Row </span>
+									</h5>
+									<button type="button"
+											class="close"
+											data-bs-dismiss="modal"
+											aria-label="Close">
+										<i aria-hidden="true">&times;</i>
+									</button>
+								</div>
+								<div class="modal-body">
+									<div class="container-fluid">
+										<p class="small">
+											Thêm hàng hóa mới
+										</p>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label asp-for="@Model.TenHh" class="form-label my-3"></label><sup>*</sup>
+													<input asp-for="@Model.TenHh" class="form-control">
+													<span asp-validation-for="@Model.TenHh" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label asp-for="@Model.TenAlias" class="form-label my-3"></label><sup>*</sup>
+													<input asp-for="@Model.TenAlias" class="form-control">
+												</div>
+											</div>
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label asp-for="@Model.MaLoai" class="form-label my-3"></label><sup>*</sup>
+													<select id="list-timezone" class="form-select" asp-items="@ViewBag.LoaiHangHoa" asp-for="@Model.MaLoai">
+													</select>
+												</div>
+
+											</div>
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label asp-for="@Model.MoTaDonVi" class="form-label my-3"></label><sup>*</sup>
+													<input asp-for="@Model.MoTaDonVi" class="form-control">
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label asp-for="@Model.DonGia" class="form-label my-3"></label><sup>*</sup>
+													<input asp-for="@Model.DonGia" class="form-control">
+													<span asp-validation-for="@Model.DonGia" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label asp-for="@Model.NgaySx" class="form-label my-3"></label><sup>*</sup>
+													<input asp-for="@Model.NgaySx" class="form-control">
+													<span asp-validation-for="@Model.NgaySx" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label asp-for="@Model.MaNcc" class="form-label my-3"></label><sup>*</sup>
+													<select id="list-timezone" class="form-select" asp-items="@ViewBag.Nhacungcap" asp-for="@Model.MaNcc">
+													</select>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label asp-for="@Model.Hinh" class="form-label my-3">Hình ảnh</label>
+													<input asp-for="@Model.FileHinh" type="file" class="form-control" id="File">
+												</div>
+											</div>
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label asp-for="@Model.MoTa" class="form-label my-3"></label><sup>*</sup>
+													<textarea asp-for="@Model.MoTa" class="form-control" spellcheck="false" cols="30" rows="5"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer border-0">
+									<button type="submit"
+											id="addRowButton"
+											class="btn btn-primary">
+										Thêm
+									</button>
+									<button type="button"
+											class="btn btn-danger"
+											data-bs-dismiss="modal">
+										Close
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table id="Tab_HangHoa" class="display table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>Mã HH</th>
+								<th>Tên HH</th>
+								<th>Tên Alias</th>
+								<th>Loại HH</th>
+								<th>Mô Tả DV</th>
+								<th>Đơn Giá</th>
+								<th>Ngày Sản Xuất</th>
+								<th>Giảm Giá</th>
+								<th>Số Lần Xem</th>
+								<th>Mô tả</th>
+								<th>Nhà Cung Cấp</th>
+								<th>Hình</th>
+								<th style="width: 10%">Action</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+@section Scripts {
+	<script>
+		// load datatable
+		$.ajax({
+			url: '/Admin/DanhMucHangHoa/LoadDMHangHoa',
+			type: 'GET',
+			dataType: 'json',
+			contentType: "application/json",
+			success: function (obj, status) {
+				$("#Tab_HangHoa").DataTable({
+					data: obj,
+					responsive: true,
+					order: [[0, 'desc']],
+					columns: [
+						{ data: 'maHh' },
+						{ data: 'tenHh' },
+						{ data: 'tenAlias' },
+						{ data: 'tenLoai' },
+						{ data: 'moTaDonVi' },
+						{ data: 'donGia' },
+						{
+							data: 'ngaySx', render: function (data, type, row) {
+								if (type === 'display' || type === 'filter') {
+									var date = moment(data, 'YYYY-MM-DDTHH:mm:ss');
+									return date.isValid() ? date.format('DD/MM/YYYY') : 'Invalid date';
+								}
+								return data;
+							}
+						},
+						{ data: 'giamGia' },
+						{ data: 'soLanXem' },
+						{ data: 'moTa' },
+						{ data: 'nhaCC' },
+						{
+							data: null,
+							render: function (data, type, row) {
+								if (type == 'display') {
+									var a = '<img src="/Hinh/HangHoa/' + row.hinh + '" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px; "></img>';
+									return a;
+								}
+								return data;
+							}
+						},
+						{
+							data: 'maHh',
+							render: function (data, type, row) {
+								var button = "<a href ='UpdateHangHoa?MaHh="+data+"' class='btn btn-link btn-primary'><i class='fa fa-edit'></i></a>" +
+									"<button type='button' id='btnXoa' class='btn btn-link btn-danger'><i class='fa fa-times'></i></button>";
+								return button;
+							}
+									
+						}
+					],
+
+				})
+			}
+		});
+
+		// nhập hàng hóa
+		$('#FormNhapHangHoa').on('submit', function (e) {		
+			e.preventDefault(); // Ngăn chặn hành vi submit mặc định của form
+			var formData = new FormData(this);// Tạo một đối tượng FormData mới
+			var table = $('#Tab_HangHoa').DataTable();
+			$.ajax({
+				url: '/Admin/DanhMucHangHoa/NhapHangHoa', // URL tới action trong controller
+				type: 'POST',
+				data: formData,
+				dataType: 'json', // Kiểu dữ liệu mong muốn nhận về
+				contentType: false,// cần thiết để gửi FormData thông qua Ajax
+				processData: false,// cần thiết để gửi FormData thông qua Ajax
+				success: function (response) {
+					if (response.success == true) {
+						table.row.add(response.data).draw(); // thêm vào dòng vừa thêm vào datatable
+						$('#addRowModal').find('#FormNhapHangHoa')[0].reset(); // clear  data form 
+						$('#addRowModal').modal('hide'); // tắt modal đi
+						Swal.fire({							
+							icon: 'success',
+							title: 'Thông Báo',
+							text: 'Thêm hàng hóa thành công !'
+						});
+					}
+					else {
+						Swal.fire({
+							icon: 'error',
+							title: 'Thông Báo',
+							text: 'Thêm thất bại !',
+						});
+					}
+				},
+			});
+		});
+
+		// Xóa hàng hóa
+		// Sự kiện click cho nút btnXoa
+		$('#Tab_HangHoa').on('click', '#btnXoa', function () {
+			Swal.fire({
+				icon: 'question',
+				title: 'Thông Báo',
+				text: 'Bạn có chắc muốn xóa không ?',
+				showCancelButton: true,
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes',
+				confirmButtonColor: '#3085d6',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					var table = $('#Tab_HangHoa').DataTable();
+					var data = table.row($(this).parents('tr')).data();// data là một mảng hoặc đối tượng chứa dữ liệu của dòng
+					var rowd = table.row($(this).parents('tr'));
+					$.ajax({
+						url: '/Admin/DanhMucHangHoa/DeleteHangHoa',
+						type: 'Delete',
+						data: { MaHh: data.maHh },
+						dataType: 'json',
+						success: function (response) {
+							if (response.success == true) {
+								rowd.remove().draw();
+								Swal.fire({
+									icon: 'success',
+									title: 'Thông Báo',
+									text: 'Xóa thành công !'
+								});
+							}
+							else {
+								Swal.fire({
+									icon: 'error',
+									title: 'Thông Báo',
+									text: 'Xóa thất bại !',
+								});
+							}
+						},
+
+					});
+				}
+			});
+		});
+
+	</script>
+
+
+	<!-- kiểm tra input không cần gửi qua server-->
+	<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+	<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>	
+}
